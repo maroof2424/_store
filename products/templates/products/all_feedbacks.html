@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Feedback for {{ product.name }}{% endblock %}
+{% block content %}
+    <section class="py-5">
+        <div class="container">
+            <h2 class="mb-4">Feedback for {{ product.name }}</h2>
+            <div class="products-grid">
+                {% for feedback in feedbacks %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ feedback.user.username }}</h5>
+                            <div class="text-warning mb-2">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= feedback.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p>{{ feedback.comment }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No feedback yet.</p>
+                {% endfor %}
+            </div>
+            {% if feedbacks.has_other_pages %}
+                <div class="mt-5 text-center">
+                    <div class="btn-group">
+                        {% if feedbacks.has_previous %}
+                            <a href="?page={{ feedbacks.previous_page_number }}" class="btn btn-secondary">Previous</a>
+                        {% endif %}
+                        {% for num in feedbacks.paginator.page_range %}
+                            <a href="?page={{ num }}" class="btn {% if feedbacks.number == num %}btn-primary{% else %}btn-secondary{% endif %}">{{ num }}</a>
+                        {% endfor %}
+                        {% if feedbacks.has_next %}
+                            <a href="?page={{ feedbacks.next_page_number }}" class="btn btn-secondary">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <img src="{{ product.image.url|default:'https://via.placeholder.com/500' }}" class="img-fluid rounded" alt="{{ product.name }}">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="mb-4">{{ product.name }}</h2>
+                    <p class="text-muted mb-4">{{ product.description }}</p>
+                    <div class="mb-4">
+                        <span class="price">Rs.{{ product.price }}</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= avg_rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        <small class="text-muted">({{ total_feedbacks }} reviews)</small>
+                    </div>
+                    <div class="d-flex gap-3 flex-wrap mb-4">
+                        <a href="{% url 'add_feedback' product.pk %}" class="btn btn-primary">
+                            <i class="fas fa-comment me-2"></i>Add Feedback
+                        </a>
+                        <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message|urlencode }}" class="whatsapp-btn">
+                            <i class="fab fa-whatsapp me-2"></i>Buy on WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" style="background: var(--bg-secondary);">
+        <div class="container">
+            <h2 class="mb-4">Customer Feedback</h2>
+            <div class="products-grid">
+                {% for feedback in feedbacks %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ feedback.user.username }}</h5>
+                            <div class="text-warning mb-2">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= feedback.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p>{{ feedback.comment }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No feedback yet.</p>
+                {% endfor %}
+            </div>
+            <a href="{% url 'all_feedbacks' product.pk %}" class="btn btn-primary mt-4">
+                <i class="fas fa-eye me-2"></i>View All Feedback
+            </a>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <h2 class="mb-4">Related Products</h2>
+            <div class="products-grid">
+                {% for product in related_products %}
+                    <div class="card product-card">
+                        <img src="{{ product.image.url|default:'https://via.placeholder.com/300x250' }}" class="product-image" alt="{{ product.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="text-muted">{{ product.description|truncatewords:20 }}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="price">Rs.{{ product.price }}</span>
+                                <div class="rating text-warning">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= avg_rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <small class="text-muted ms-1">({{ total_feedbacks }})</small>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-2"></i>View Details
+                                </a>
+                                <a href="https://wa.me/{{ whatsapp_number }}?text={{ product.name|urlencode }}%20-%20Price:%20Rs.{{ product.price }}" class="whatsapp-btn">
+                                    <i class="fab fa-whatsapp me-2"></i>Order Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No related products available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
