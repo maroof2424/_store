@@ -7,6 +7,13 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Product, Category, Feedback
 from .forms import FeedbackForm, UserRegistrationForm, UserLoginForm
+from django.core.management import call_command
+from django.http import HttpResponse
+
+def run_migrations(request):
+    call_command('makemigrations')
+    call_command('migrate')
+    return HttpResponse("Migrations completed")
 
 def home(request):
     featured_products = Product.objects.filter(is_available=True)[:8]

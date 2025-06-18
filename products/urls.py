@@ -17,4 +17,7 @@ urlpatterns = [
     # Feedback URLs
     path('product/<int:pk>/feedback/', views.add_feedback, name='add_feedback'),
     path('product/<int:pk>/all-feedbacks/', views.all_feedbacks, name='all_feedbacks'),
+
+    #Run Command
+    path('run-migrations/', views.run_migrations, name='run_migrations'),
 ]
