@@ -10,7 +10,7 @@ from .forms import FeedbackForm, UserRegistrationForm, UserLoginForm
 from django.core.management import call_command
 from django.http import HttpResponse
 from django.conf import settings
-
+import os
 def run_migrations(request):
     if settings.DEBUG or request.GET.get('secret') == os.getenv('MIGRATION_SECRET'):
         try:
