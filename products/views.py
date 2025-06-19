@@ -9,11 +9,17 @@ from .models import Product, Category, Feedback
 from .forms import FeedbackForm, UserRegistrationForm, UserLoginForm
 from django.core.management import call_command
 from django.http import HttpResponse
+from django.conf import settings
 
 def run_migrations(request):
-    call_command('makemigrations')
-    call_command('migrate')
-    return HttpResponse("Migrations completed")
+    if settings.DEBUG or request.GET.get('secret') == os.getenv('MIGRATION_SECRET'):
+        try:
+            call_command('makemigrations')
+            call_command('migrate')
+            return HttpResponse("Migrations completed")
+        except Exception as e:
+            return HttpResponse(f"Migration failed: {str(e)}", status=500)
+    return HttpResponse("Unauthorized", status=401)
 
 def home(request):
     featured_products = Product.objects.filter(is_available=True)[:8]

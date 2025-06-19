@@ -12,6 +12,6 @@
     }
   ],
   "build": {
-    "command": "bash migrate.sh"
+    "command": "bash migrate.sh && python manage.py collectstatic --noinput"
   }
 }
